@@ -2,6 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const uploadRoute = require('./routes/upload');
+const downloadRoute = require('./routes/download');
+const roomRoute = require('./routes/room');
 const port = process.env.PORT || 8001;
 const app = express();
 app.use(cors());
@@ -19,9 +22,11 @@ db.once('open', () => {
     console.log('Connected to MongoDB');
 })
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-})
+app.use('/upload', uploadRoute);
+app.use('/download', downloadRoute);
+app.use('/room',roomRoute)
+
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
