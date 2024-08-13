@@ -3,8 +3,7 @@ import axios from 'axios';
 
 const RoomFiles = ({ roomId, files, setFiles }) => {
     const [error, setError] = useState(null);
-    console.log(roomId);
-    
+
     useEffect(() => {
         const fetchFiles = async () => {
             try {
@@ -16,20 +15,35 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
             }
         };
         fetchFiles();
-    }, [roomId]);
+    }, [roomId, setFiles]);
 
     if (error) {
-        return <div>Error: {error.message}</div>;
+        return <div className="text-red-500">Error: {error.message}</div>;
     }
 
     return (
-        <div>
-            <h2>Files in Room: {roomId}</h2>
-            <ul>
+        <div className="mt-6">
+            <h2 className="text-2xl font-semibold mb-4">Files in Room: {roomId}</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {files.map((file, index) => (
-                    <li key={index}>{file.filename} - <a href={`http://localhost:5000/download/${file._id}`} download>Download</a></li>
+                    <div key={index} className="relative group">
+                        <img
+                            src={file.url}
+                            alt={file.filename}
+                            className="w-full h-32 object-cover rounded-md"
+                        />
+                        <div className="absolute inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <a
+                                href={file.url}
+                                download
+                                className="text-white font-semibold text-sm hover:underline"
+                            >
+                                Download
+                            </a>
+                        </div>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 };

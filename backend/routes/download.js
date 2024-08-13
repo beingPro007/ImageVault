@@ -11,8 +11,8 @@ router.get('/:fileId', async (req, res) => {
       return res.status(404).json({ error: 'File not found' });
     }
 
-    const filePath = path.join(__dirname, '../', file.path);
-    res.download(filePath, file.filename);
+    // const filePath = path.join(__dirname, '../', file.path);
+    res.download(file.url, file.filename);
   } catch (error) {
     res.status(500).json({ error: 'Failed to download file' });
   }

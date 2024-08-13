@@ -1,3 +1,4 @@
+const Filee = require('../models/File.js');
 const Room = require('../models/Room.js');
 
 const createRoom = async (req, res) => {
@@ -27,17 +28,22 @@ const findRoom = async (req, res) => {
 };
 
 const getFilesByRoomId = async (req, res) => {
-    console.log("hiiiiiii");
+    // console.log("hiiiiiii");
     
     try {
         const { roomId } = req.params;
-        console.log("Fetching files for Room ID:", roomId);
+        // console.log("Fetching files for Room ID:", roomId);
         const room = await Room.findOne({ roomId }).populate('files');
         if (!room) {
             console.log("Room not found for ID:", roomId);
             return res.status(404).json({ message: 'Room not found' });
         }
-        res.json(room.files);
+        const files = await Filee.find({
+            _id: { $in: room.files } // Find files whose _id is in the room's files array
+        });
+        
+        res.json(files)
+        // res.json(room.files);
     } catch (error) {
         console.log("Server error:", error);
         res.status(500).json({ message: 'Server error', error });

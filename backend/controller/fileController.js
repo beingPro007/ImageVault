@@ -1,10 +1,10 @@
 const cloudinary = require('../config/cloudinaryConfig');
 const Room = require('../models/Room');
+const Filee = require('../models/File');
 
 const uploadFile = async (req, res) => {
   const { roomId } = req.params;
   console.log("1");
-
 
   try {
     console.log("2");
@@ -24,40 +24,41 @@ const uploadFile = async (req, res) => {
 
     console.log("4");
 
-
-    const uploadResponse = await cloudinary.uploader.upload_stream(
-      {
-        folder: roomId,
-      },
-      (error, result) => {
-        if (error) {
-          console.error('Cloudinary upload error:', error);
-          return res.status(500).json({ error: 'Failed to upload file to Cloudinary' });
+    const uploadResponse = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        {
+          folder: roomId,
+        },
+        (error, result) => {
+          if (error) {
+            console.error('Cloudinary upload error:', error);
+            reject(error);
+          } else {
+            console.log("5");
+            resolve(result);
+          }
         }
-        console.log("5");
+      ).end(file.buffer);
+    });
 
+    const newFileData = {
+      filename: file.originalname.split('.')[0],
+      url: uploadResponse.secure_url,
+      cloudinary_id: uploadResponse.public_id,
+      roomId: room._id,
+    };
+    console.log("6");
+    
+    const newFile = new Filee(newFileData);
+    await newFile.save();
 
-        const newFile = {
-          filename: result.original_filename,
-          url: result.secure_url,
-          cloudinary_id: result.public_id,
-        };
-        console.log("6");
+    room.files.push(newFile._id);
+    await room.save();
+    console.log("7");
 
-
-        room.files.push(newFile);
-        console.log("7");
-
-        room.save();
-        console.log("8");
-
-
-        res.status(200).json(newFile);
-      }
-    ).end(file.buffer);
+    res.status(200).json(newFile);
   } catch (error) {
-    console.log("9");
-
+    console.log("8");
     console.error('Server error:', error);
     res.status(500).json({ error: 'Failed to upload file' });
   }
