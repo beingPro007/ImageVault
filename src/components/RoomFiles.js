@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const RoomFiles = ({ roomId, files, setFiles }) => {
     const [error, setError] = useState(null);
@@ -12,6 +13,7 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
             } catch (err) {
                 setError(err);
                 console.error('Error fetching files:', err);
+                toast.error("Error fetching files")
             }
         };
         fetchFiles();
@@ -23,7 +25,6 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
 
     return (
         <div className="mt-6">
-            <h2 className="text-2xl font-semibold mb-4">Files in Room: {roomId}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {files.map((file, index) => (
                     <div key={index} className="relative group">

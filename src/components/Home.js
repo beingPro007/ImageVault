@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 
 function Home() {
   const [roomId, setRoomId] = useState('');
@@ -16,6 +17,7 @@ function Home() {
       }
     } catch (error) {
       console.error('Error creating room:', error);
+      toast('Error creating room')
     }
   };
 
@@ -27,15 +29,19 @@ function Home() {
           navigate(`/room/${roomId}`);
         } else {
           console.error('Room not found:', response.data);
+          toast.error("Room not found")
         }
       } catch (error) {
         console.error('Error joining room:', error);
+        toast.error('Error joining room')
+
       }
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+      <ToastContainer/>
       <h1 className="text-4xl font-bold mb-6">FileVault</h1>
       <button
         onClick={handleCreateRoom}
