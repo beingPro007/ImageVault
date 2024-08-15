@@ -1,5 +1,5 @@
 const express = require('express');
-const { createRoom, findRoom, getFilesByRoomId } = require('../controller/roomController');
+const { createRoom, findRoom, getFilesByRoomId } = require('../controller/roomController.js');
 const router = express.Router();
 
 router.get('/create', createRoom);

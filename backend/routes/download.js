@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const File = require('../models/File');
+const File = require('../models/File.js');
 
 const router = express.Router();
 

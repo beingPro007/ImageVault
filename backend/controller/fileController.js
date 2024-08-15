@@ -1,6 +1,6 @@
 const cloudinary = require('../config/cloudinaryConfig');
-const Room = require('../models/Room');
-const Filee = require('../models/File');
+const Room = require('../models/Room.js');
+const Filee = require('../models/File.js');
 
 const uploadFile = async (req, res) => {
   const { roomId } = req.params;
