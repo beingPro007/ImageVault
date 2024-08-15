@@ -25,7 +25,10 @@ db.once('open', () => {
 app.use('/upload', uploadRoute);
 app.use('/download', downloadRoute);
 app.use('/room',roomRoute)
-
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
+  });
 
 
 app.listen(port, () => {
